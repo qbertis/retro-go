@@ -1,5 +1,6 @@
 #include "rg_system.h"
 #include "rg_input.h"
+#include "rg_usb_keyboard.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -206,6 +207,8 @@ bool rg_input_read_gamepad_raw(uint32_t *out)
             state = keymap_virt[i].key;
     }
 #endif
+	// USB-клавіатура
+    state |= rg_usb_keyboard_get_state();
 
     if (out)
         *out = state;
@@ -356,6 +359,9 @@ void rg_input_init(void)
 
     // The first read returns bogus data in some drivers, waste it.
     rg_input_read_gamepad_raw(NULL);
+	
+	// USB-клавіатура (не критично, якщо не підключена)
+    rg_usb_keyboard_init();
 
     // Start background polling
     rg_task_create("rg_input", &input_task, NULL, 3 * 1024, RG_TASK_PRIORITY_6, 1);
@@ -366,6 +372,7 @@ void rg_input_init(void)
 
 void rg_input_deinit(void)
 {
+	rg_usb_keyboard_deinit(); //USB-keyboard
     input_task_running = false;
     // while (gamepad_state != -1)
     //     rg_task_yield();

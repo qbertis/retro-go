@@ -210,6 +210,7 @@ void app_main(void)
 
     app = rg_system_init(AUDIO_SAMPLE_RATE / 2, &handlers, NULL);
 
+
     yfm_enabled = rg_settings_get_number(NS_APP, SETTING_YFM_EMULATION, 1);
     sn76489_enabled = rg_settings_get_number(NS_APP, SETTING_SN76489_EMULATION, 0);
     z80_enabled = rg_settings_get_number(NS_APP, SETTING_Z80_EMULATION, 1);
